@@ -1,9 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 import uvicorn
 from decibel import Decibel
 
 app = FastAPI()
-db_monitor = Decibel()
 
 
 @app.get("/")
@@ -11,6 +10,13 @@ async def root():
     return {"message": "Hello World!"}
 
 
+@app.post("/monitor")
+async def monitor(background_tasks: BackgroundTasks):
+    decibel = Decibel()
+    def callback(pre,cur):
+        print("pre:{:.3f} cur:{:.3f}".format(pre,cur))
+    background_tasks.add_task(decibel.monitor,callback)
+    
 
 @app.post("/record/{name}")
 async def record(name):
@@ -23,9 +29,8 @@ async def exec_name(name):
 
 @app.get("/decibel")
 async def get_decibel():
-    return {"db": db_monitor.get_decibel()}
-
-
+    decibel = Decibel()
+    return {"Db":"{:.3f}".format(decibel.get_decibel())}
 
 
 if __name__ == "__main__":

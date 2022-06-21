@@ -18,6 +18,7 @@ class Decibel:
                 )
     def __del__(self):
         self.stream.close()
+        self.pyaudio.terminate()
 
     def get_decibel(self)-> np.float64:
         data = np.empty(0)
@@ -29,9 +30,31 @@ class Decibel:
         rms = np.sqrt(np.mean([elm * elm for elm in data]))
         # RMS to db
         return to_db(rms, 20e-6)
+    
+    def monitor(self,callback,sec=1):
+        pre = self.get_decibel()
+        excess_counter = 2
+        margin = 5
+        while True:
+            cur = self.get_decibel()
+            print("{:.3f}".format(cur))
+            if  abs(cur - pre) > margin:
+                while excess_counter > 0:
+                    cur = self.get_decibel()
+                    print("{:.3f}".format(cur))
+                    if abs(cur - pre) <= margin:
+                        break
+                    sleep(sec)
+                    excess_counter -= 1
+                if excess_counter == 0:
+                    callback(pre,cur)
+            pre = cur
+            sleep(sec)
+            
+            
         
 
 # amp to db
-def to_db(x, base=1):
+def to_db(x, base=1.0)-> np.float64:
     y=20*np.log10(x/base)
     return y
