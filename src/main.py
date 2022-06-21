@@ -1,6 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks
 import uvicorn
 from decibel import Decibel
+from remocon import Remocon
 
 app = FastAPI()
 
@@ -20,12 +21,14 @@ async def monitor(background_tasks: BackgroundTasks):
 
 @app.post("/record/{name}")
 async def record(name):
-    print(name)
+    r = Remocon()
+    r.record(name)
 
 
-@app.post("/exec/{name}")
-async def exec_name(name):
-    print(name)
+@app.post("/play/{name}")
+async def play(name):
+    r = Remocon()
+    r.play(name)
 
 @app.get("/decibel")
 async def get_decibel():
