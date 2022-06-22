@@ -85,6 +85,7 @@ class Remocon:
             sleep(delay)
         
         self.pi.wave_chain(wave)
+        
         while self.pi.wave_tx_busy():
             sleep(0.002)
         emit_time = time() + GAP_S
@@ -184,7 +185,6 @@ class Remocon:
                             p[j] = 1
 
     def end_of_code(self):
-        global code, fetching_code
         if len(self.code) > SHORT:
             self.normalise()
             self.fetching_code = False

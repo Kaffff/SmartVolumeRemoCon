@@ -50,6 +50,7 @@ class Decibel:
                     callback(pre,cur)
             pre = cur
             sleep(sec)
+
             
             
         
