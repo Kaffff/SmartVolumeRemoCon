@@ -4,7 +4,6 @@ from fastapi import FastAPI, BackgroundTasks
 import uvicorn
 from decibel import Decibel
 from remocon import Remocon
-from controller import Controller
 
 app = FastAPI()
 app.state.__setattr__(key="is_active",value=False)

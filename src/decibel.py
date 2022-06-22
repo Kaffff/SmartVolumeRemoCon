@@ -4,7 +4,7 @@ import numpy as np
 
 # set prams
 CHUNK = 1024
-INPUT_DEVICE1_INDEX = 4
+INPUT_DEVICE1_INDEX = 1
 
 class Decibel:
     def __init__(self,):
