@@ -20,23 +20,27 @@ async def start(background_tasks: BackgroundTasks):
         pre_db = decibel.get_decibel()
         pre_db_level = round(round(pre_db*2,-1)/10)
         sleep(sec)
+        count = 0
         while app.state.__getattr__(key="is_active"):
             cur_db = decibel.get_decibel()
             cur_db_level = round(round(cur_db*2,-1)/10)
             print("{:.3f},{}".format(cur_db,cur_db_level))
             sleep(sec)
             margin = cur_db_level - pre_db_level
+            if margin > 0 and count < 3:
+                count  += 1
+                continue
             if margin > 0:
-                for i in range(margin):
+                for i in range(margin*2):
                     remocon.play("volume_up")
                     print("up")
                     sleep(0.1)
             if margin < 0:
-                for i in range(-margin):
+                for i in range(-margin*2):
                     remocon.play("volume_down")
                     print("down")
                     sleep(0.1)
-                
+            count = 0    
             pre_db_level = cur_db_level
             
     background_tasks.add_task(loop)
